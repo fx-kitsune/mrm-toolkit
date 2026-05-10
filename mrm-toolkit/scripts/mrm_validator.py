@@ -16,12 +16,13 @@ Usage:
     python mrm_validator.py count-lines <file>
     python mrm_validator.py check-links <directory>
     python mrm_validator.py generate-index <directory>
+    python mrm_validator.py install-adapter <codex|claude|gemini|copilot|cursor|agent_ide> <project_root> [--overwrite]
 """
 
 import os
 import sys
 import re
-import yaml
+import shutil
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass
@@ -54,22 +55,61 @@ class MRMValidator:
         if self.verbose:
             print(message)
     
+    def parse_frontmatter_block(self, block: str) -> Optional[Dict]:
+        """Parse the small YAML-frontmatter subset used by MRM.
+
+        The parser supports scalar strings, inline lists (`tags: [a, b]`),
+        block lists, and empty values. It keeps the validator dependency-free
+        for agent workspaces where PyYAML is not installed.
+        """
+        data: Dict[str, object] = {}
+        current_key: Optional[str] = None
+
+        for raw_line in block.splitlines():
+            line = raw_line.rstrip()
+            stripped = line.strip()
+            if not stripped or stripped.startswith('#'):
+                continue
+
+            if stripped.startswith('- ') and current_key:
+                data.setdefault(current_key, [])
+                if isinstance(data[current_key], list):
+                    data[current_key].append(stripped[2:].strip().strip('"\''))
+                continue
+
+            if ':' not in line:
+                self.log(f"⚠️  Bỏ qua dòng frontmatter không hợp lệ: {line}")
+                continue
+
+            key, value = line.split(':', 1)
+            key = key.strip()
+            value = value.strip()
+            current_key = key
+
+            if value == '':
+                data[key] = ''
+            elif value.startswith('[') and value.endswith(']'):
+                items = value[1:-1].strip()
+                data[key] = [] if not items else [item.strip().strip('"\'') for item in items.split(',')]
+            elif (value.startswith('"') and value.endswith('"')) or (value.startswith("'") and value.endswith("'")):
+                data[key] = value[1:-1]
+            else:
+                data[key] = value
+
+        return data if data else None
+
     def extract_frontmatter(self, content: str) -> Tuple[Optional[Dict], str]:
         """Tách YAML frontmatter khỏi nội dung Markdown"""
         pattern = r'^---\n(.*?)\n---\n(.*)'
         match = re.match(pattern, content, re.DOTALL)
-        
+
         if not match:
             return None, content
-        
-        try:
-            frontmatter = yaml.safe_load(match.group(1))
-            body = match.group(2)
-            return frontmatter, body
-        except yaml.YAMLError as e:
-            self.log(f"⚠️  Lỗi parse YAML: {e}")
-            return None, content
-    
+
+        frontmatter = self.parse_frontmatter_block(match.group(1))
+        body = match.group(2)
+        return frontmatter, body
+
     def count_content_lines(self, content: str) -> int:
         """Đếm số dòng nội dung (không tính frontmatter, comment, dòng trống liên tiếp)"""
         _, body = self.extract_frontmatter(content)
@@ -511,6 +551,52 @@ tags: [report, assembled]
     print(f"✅ Đã ghép báo cáo: {output_path} ({len(file_contents)} modules)")
 
 
+ADAPTER_TARGETS = {
+    "codex": ("mrm-toolkit/adapters/codex/AGENTS.md", "AGENTS.md"),
+    "claude": ("mrm-toolkit/adapters/claude/CLAUDE.md", "CLAUDE.md"),
+    "claude_code": ("mrm-toolkit/adapters/claude/CLAUDE.md", "CLAUDE.md"),
+    "gemini": ("mrm-toolkit/adapters/gemini/GEMINI.md", "GEMINI.md"),
+    "copilot": ("mrm-toolkit/adapters/copilot/copilot-instructions.md", ".github/copilot-instructions.md"),
+    "cursor": ("mrm-toolkit/adapters/cursor/mrm.mdc", ".cursor/rules/mrm.mdc"),
+    "agent_ide": ("mrm-toolkit/adapters/agent-ide/AGENT-RULES.md", ".agent/rules/mrm.md"),
+}
+
+
+def find_toolkit_root(start: Optional[Path] = None) -> Path:
+    """Find the mrm-toolkit root from the current script or working directory."""
+    candidates = []
+    if start:
+        candidates.append(start.resolve())
+    candidates.extend([Path(__file__).resolve().parent.parent, Path.cwd() / "mrm-toolkit", Path.cwd()])
+
+    for candidate in candidates:
+        if (candidate / "manifest.yaml").exists() and (candidate / "adapters").exists():
+            return candidate
+    raise FileNotFoundError("Không tìm thấy mrm-toolkit root chứa manifest.yaml và adapters/")
+
+
+def install_adapter(adapter: str, project_root: str, overwrite: bool = False) -> Path:
+    """Install an agent adapter instruction file into a target project."""
+    adapter_key = adapter.strip().lower().replace("-", "_")
+    if adapter_key not in ADAPTER_TARGETS:
+        available = ", ".join(sorted(ADAPTER_TARGETS))
+        raise ValueError(f"Adapter không hợp lệ: {adapter}. Các adapter hỗ trợ: {available}")
+
+    toolkit_root = find_toolkit_root()
+    source_rel, target_rel = ADAPTER_TARGETS[adapter_key]
+    source = toolkit_root.parent / source_rel
+    target = Path(project_root).resolve() / target_rel
+
+    if not source.exists():
+        raise FileNotFoundError(f"Không tìm thấy adapter source: {source}")
+    if target.exists() and not overwrite:
+        raise FileExistsError(f"File đích đã tồn tại: {target}. Thêm --overwrite để ghi đè.")
+
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source, target)
+    return target
+
+
 def main():
     """CLI entry point"""
     if len(sys.argv) < 2:
@@ -588,6 +674,22 @@ def main():
         input_dir = sys.argv[2]
         output_path = sys.argv[3]
         assemble_report(input_dir, output_path)
+
+    elif command == 'install-adapter':
+        if len(sys.argv) < 4:
+            print("Usage: python mrm_validator.py install-adapter <adapter> <project_root> [--overwrite]")
+            print(f"Adapters: {', '.join(sorted(ADAPTER_TARGETS))}")
+            sys.exit(1)
+        adapter = sys.argv[2]
+        project_root = sys.argv[3]
+        overwrite = '--overwrite' in sys.argv[4:]
+        try:
+            target = install_adapter(adapter, project_root, overwrite=overwrite)
+            print(f"✅ Đã cài adapter {adapter}: {target}")
+            sys.exit(0)
+        except Exception as e:
+            print(f"❌ Không cài được adapter: {e}")
+            sys.exit(1)
     
     else:
         print(f"❌ Command không hợp lệ: {command}")

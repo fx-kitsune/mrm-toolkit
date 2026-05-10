@@ -1,167 +1,161 @@
-# MRM Toolkit - Bộ Công cụ Modular Research Markdown
+# MRM Toolkit - Modular Research Markdown Agent Toolkit
 
-## Giới thiệu
+MRM Toolkit là bộ công cụ giúp agent và con người **plan → write → validate → index → assemble** tài liệu nghiên cứu dạng Markdown theo chuẩn Modular Research Markdown.
 
-MRM (Modular Research Markdown) Toolkit là bộ công cụ hỗ trợ viết và quản lý tài liệu nghiên cứu theo kiến trúc module hóa, tối ưu cho cả **người đọc** và **AI xử lý**.
+## Vấn đề repo này giải quyết
 
-## Cài đặt Nhanh
+Nhiều dự án research/doc bị lẫn lộn 3 thứ:
 
-### Yêu cầu Hệ thống
+- **Skill**: agent phải hành xử như thế nào.
+- **Plan**: việc cần làm trong một lần nâng cấp/tác vụ cụ thể.
+- **Content**: tài liệu nghiên cứu thật sự.
+
+Toolkit này tách chúng thành các lớp rõ ràng để dùng được với Codex, Claude Code, Gemini, Copilot, Cursor và các agent IDE khác.
+
+## Kiến trúc thư mục
+
+```text
+mrm-toolkit/
+├── manifest.yaml                         # Máy đọc được: entrypoints, adapters, commands
+├── skills/
+│   └── modular-research-doc-writer/
+│       └── SKILL.md                       # Skill canonical, không chứa roadmap tạm thời
+├── workflows/
+│   └── MRM-WORKFLOW.md                    # Quy trình agent chuẩn
+├── contracts/
+│   ├── OUTPUT-CONTRACT.md                 # Shape output bắt buộc
+│   └── QUALITY-RUBRIC.md                  # Rubric tự kiểm định
+├── adapters/
+│   ├── codex/AGENTS.md                    # OpenAI Codex
+│   ├── claude/CLAUDE.md                   # Claude Code
+│   ├── gemini/GEMINI.md                   # Gemini CLI / IDE
+│   ├── copilot/copilot-instructions.md    # GitHub Copilot
+│   ├── cursor/mrm.mdc                     # Cursor rules
+│   └── agent-ide/AGENT-RULES.md           # Generic agent IDE
+├── prompts/
+│   └── quickstart-prompts.md              # Prompt cookbook
+├── templates/
+│   └── note-template.md                   # Atomic note template
+├── scripts/
+│   └── mrm_validator.py                   # Validate, index, assemble, install adapters
+├── research/                              # Research tree mẫu
+└── docs/                                  # Legacy docs và kế hoạch nâng cấp
+```
+
+## Cài đặt nhanh
+
+### Yêu cầu
 
 - Python 3.8+
-- PyYAML (`pip install pyyaml`)
+- Không cần dependency ngoài cho validation cơ bản; validator có parser frontmatter tối giản tích hợp.
+- Có thể cài PyYAML riêng nếu workflow nội bộ của bạn cần parse YAML đầy đủ.
 
-### Cấu trúc Thư mục
+## Dùng với agent
 
-```
-mrm-toolkit/
-├── scripts/              # Python validation scripts
-│   └── mrm_validator.py  # Tool chính
-├── templates/            # Template chuẩn
-│   └── note-template.md
-├── research/             # Thư mục nghiên cứu mẫu
-│   ├── index.md          # Mục lục tự động
-│   ├── meta/             # Metadata & overview
-│   ├── notes/            # Atomic notes
-│   ├── core/             # Nội dung chính
-│   └── outputs/          # Báo cáo đã assemble
-└── docs/                 # Tài liệu hướng dẫn
-    └── MRM-Skill-ModularResearchDocWriter.md
-```
-
-## Sử dụng Cơ bản
-
-### 1. Kiểm định File/Thư mục
+### Codex
 
 ```bash
-# Kiểm tra toàn bộ thư mục
-python scripts/mrm_validator.py validate research/
-
-# Kiểm tra file đơn lẻ
-python scripts/mrm_validator.py validate-file research/core/core-01-atomic-structure.md
-
-# Đếm số dòng nội dung
-python scripts/mrm_validator.py count-lines research/core/core-01-atomic-structure.md
+python mrm-toolkit/scripts/mrm_validator.py install-adapter codex /path/to/project
 ```
 
-### 2. Tự động sinh Index
+Tạo `/path/to/project/AGENTS.md` từ adapter Codex.
+
+### Claude Code
 
 ```bash
-# Tạo index.md từ cây thư mục
-python scripts/mrm_validator.py generate-index research/
-
-# Hoặc chỉ định output path
-python scripts/mrm_validator.py generate-index research/ docs/custom-index.md
+python mrm-toolkit/scripts/mrm_validator.py install-adapter claude /path/to/project
 ```
 
-### 3. Ghép Báo cáo Hoàn chỉnh
+Tạo `/path/to/project/CLAUDE.md`.
+
+### Gemini
 
 ```bash
-# Assemble tất cả module thành báo cáo
-python scripts/mrm_validator.py assemble research/ outputs/final-report.md
+python mrm-toolkit/scripts/mrm_validator.py install-adapter gemini /path/to/project
 ```
 
-## Checklist Chuẩn MRM
+Tạo `/path/to/project/GEMINI.md`.
 
-Trước khi commit file, đảm bảo:
-
-- [ ] YAML frontmatter đầy đủ 6 trường bắt buộc
-- [ ] `ai_context` mô tả rõ task downstream
-- [ ] TL;DR ≤ 1 dòng
-- [ ] Summary ≤ 2 câu
-- [ ] Số dòng nội dung ≤ 300
-- [ ] Cross-reference dùng `[[id]]` hoặc markdown link kiểm chứng
-- [ ] Không có heading rỗng
-
-## Tích hợp Workflow
-
-### VS Code
-
-Thêm vào `.vscode/settings.json`:
-
-```json
-{
-  "markdownlint.config": {
-    "MD041": false,
-    "MD025": false
-  },
-  "files.associations": {
-    "*.md": "markdown"
-  }
-}
-```
-
-### Git Hooks
-
-Tạo `.git/hooks/pre-commit`:
+### GitHub Copilot
 
 ```bash
-#!/bin/bash
-python scripts/mrm_validator.py validate research/
-if [ $? -ne 0 ]; then
-  echo "❌ Validation failed. Please fix errors before commit."
-  exit 1
-fi
+python mrm-toolkit/scripts/mrm_validator.py install-adapter copilot /path/to/project
 ```
 
-### GitHub Actions
+Tạo `/path/to/project/.github/copilot-instructions.md`.
 
-Tạo `.github/workflows/mrm-validate.yml`:
-
-```yaml
-name: MRM Validation
-
-on: [push, pull_request]
-
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-      - name: Install dependencies
-        run: pip install pyyaml
-      - name: Validate MRM files
-        run: python scripts/mrm_validator.py validate research/
-```
-
-## Template Usage
-
-Copy template và điền thông tin:
+### Cursor
 
 ```bash
-cp templates/note-template.md research/notes/note-YYYY-MM-DD-topic.md
+python mrm-toolkit/scripts/mrm_validator.py install-adapter cursor /path/to/project
 ```
 
-Sau đó chỉnh sửa:
-1. Thay `[Tiêu đề]` bằng tiêu đề thực tế
-2. Điền `id`, `tags`, `summary`, `ai_context` trong frontmatter
-3. Viết TL;DR (1 dòng)
-4. Viết nội dung chính theo sections
-5. Chạy validation trước khi lưu
+Tạo `/path/to/project/.cursor/rules/mrm.mdc`.
 
-## Ví dụ Frontmatter Chuẩn
+## Quy trình chuẩn
 
-```yaml
----
-id: core-01-atomic-structure
-title: "Atomic File Structure - Cấu trúc File Nguyên tử"
-status: draft | review | final
-tags: [atomicity, chunking, file-structure]
-summary: "Quy tắc tổ chức file theo nguyên tắc atomic: 1 file = 1 chủ đề, giới hạn 300 dòng."
-ai_context: "Dùng cho AI hiểu và áp dụng quy tắc chunking. Khi gặp nội dung dài, tự động đề xuất tách file con."
----
+1. Agent đọc `manifest.yaml`.
+2. Agent nạp skill tại `skills/modular-research-doc-writer/SKILL.md`.
+3. Agent làm theo `workflows/MRM-WORKFLOW.md`.
+4. Agent xuất nội dung theo `contracts/OUTPUT-CONTRACT.md`.
+5. Agent tự kiểm với `contracts/QUALITY-RUBRIC.md`.
+6. Agent chạy validator nếu có filesystem.
+
+## Lệnh CLI
+
+### Validate thư mục
+
+```bash
+python mrm-toolkit/scripts/mrm_validator.py validate mrm-toolkit/research
 ```
 
-## Tài liệu Tham khảo
+### Validate file đơn lẻ
 
-- [Skill ModularResearchDocWriter](docs/MRM-Skill-ModularResearchDocWriter.md) - System prompt chi tiết
-- [research/index.md](research/index.md) - Mục lục ví dụ
-- [templates/note-template.md](templates/note-template.md) - Template gốc
+```bash
+python mrm-toolkit/scripts/mrm_validator.py validate-file mrm-toolkit/research/core/core-01-atomic-structure.md
+```
 
-## License
+### Đếm dòng nội dung
 
-MIT License - Tự do sử dụng và chỉnh sửa.
+```bash
+python mrm-toolkit/scripts/mrm_validator.py count-lines mrm-toolkit/research/core/core-01-atomic-structure.md
+```
+
+### Sinh index
+
+```bash
+python mrm-toolkit/scripts/mrm_validator.py generate-index mrm-toolkit/research
+```
+
+### Assemble report
+
+```bash
+python mrm-toolkit/scripts/mrm_validator.py assemble mrm-toolkit/research mrm-toolkit/research/outputs/final-report.md
+```
+
+### Cài adapter
+
+```bash
+python mrm-toolkit/scripts/mrm_validator.py install-adapter <adapter> <project_root> [--overwrite]
+```
+
+Adapter hợp lệ: `codex`, `claude`, `claude_code`, `gemini`, `copilot`, `cursor`, `agent_ide`.
+
+## Checklist MRM
+
+- [ ] YAML frontmatter có đủ `id`, `title`, `status`, `tags`, `summary`, `ai_context`.
+- [ ] `summary` không quá 2 câu.
+- [ ] TL;DR đúng 1 dòng.
+- [ ] File chỉ chứa 1 chủ đề.
+- [ ] Nội dung không quá 300 dòng.
+- [ ] Cross-reference dùng `[[frontmatter-id]]` hoặc Markdown link tồn tại.
+- [ ] `ai_context` nói rõ task downstream và điều không được bịa.
+- [ ] Roadmap hoặc plan tạm thời không nằm trong skill canonical.
+
+## Prompt mẫu
+
+Xem [`prompts/quickstart-prompts.md`](prompts/quickstart-prompts.md) để copy prompt khởi tạo, refactor, review và assemble.
+
+## Ghi chú legacy
+
+Các file trong `docs/` vẫn được giữ để tham khảo lịch sử. Với agent mới, ưu tiên `manifest.yaml`, `skills/`, `workflows/`, `contracts/`, và `adapters/`.
