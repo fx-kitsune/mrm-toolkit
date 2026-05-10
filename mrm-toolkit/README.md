@@ -32,14 +32,26 @@ mrm-toolkit/
 │   ├── copilot/copilot-instructions.md    # GitHub Copilot
 │   ├── cursor/mrm.mdc                     # Cursor rules
 │   └── agent-ide/AGENT-RULES.md           # Generic agent IDE
+├── docs/
+│   ├── index.md                           # Mục lục hướng dẫn tích hợp
+│   ├── integration-01-overview.md         # Tổng quan kiến trúc
+│   ├── integration-02-chat-agents.md      # AI Chat (ChatGPT, Claude, Gemini)
+│   ├── integration-03-vscode.md           # VS Code + extensions
+│   ├── integration-04-obsidian.md         # Obsidian
+│   ├── integration-05-cursor.md           # Cursor IDE
+│   ├── integration-06-copilot.md          # GitHub Copilot
+│   ├── integration-07-custom-agent.md     # Custom Agent API
+│   ├── integration-08-cicd.md             # Git Hooks & CI/CD
+│   └── integration-09-best-practices.md   # Best Practices
 ├── prompts/
 │   └── quickstart-prompts.md              # Prompt cookbook
 ├── templates/
 │   └── note-template.md                   # Atomic note template
 ├── scripts/
-│   └── mrm_validator.py                   # Validate, index, assemble, install adapters
+│   ├── mrm_validator.py                   # Entry point CLI (thin wrapper)
+│   └── mrm/                               # Package: validator, indexer, assembler, adapter, cli
 ├── research/                              # Research tree mẫu
-└── docs/                                  # Legacy docs và kế hoạch nâng cấp
+└── integration/                           # (trống) — nội dung đã chuyển sang docs/
 ```
 
 ## Cài đặt nhanh

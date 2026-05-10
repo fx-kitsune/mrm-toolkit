@@ -8,7 +8,6 @@ import hashlib
 import os
 import zipfile
 from pathlib import Path
-from typing import List, Tuple
 
 NAME = "modular-research-doc-writer"
 NORMALIZED = "modular_research_doc_writer"
@@ -59,7 +58,7 @@ def _hash(data: bytes) -> str:
     return "sha256=" + base64.urlsafe_b64encode(digest).rstrip(b"=").decode("ascii")
 
 
-def _write_file(wheel: zipfile.ZipFile, records: List[Tuple[str, str, str]], arcname: str, data: bytes) -> None:
+def _write_file(wheel: zipfile.ZipFile, records: list[tuple[str, str, str]], arcname: str, data: bytes) -> None:
     wheel.writestr(arcname, data)
     records.append((arcname, _hash(data), str(len(data))))
 
@@ -81,7 +80,7 @@ def _iter_package_files(root: Path):
 def build_wheel(wheel_directory, config_settings=None, metadata_directory=None):
     root = Path(__file__).resolve().parent
     wheel_path = Path(wheel_directory) / WHEEL_NAME
-    records: List[Tuple[str, str, str]] = []
+    records: list[tuple[str, str, str]] = []
 
     with zipfile.ZipFile(wheel_path, "w", compression=zipfile.ZIP_DEFLATED) as wheel:
         for path, arcname in _iter_package_files(root):
@@ -99,7 +98,7 @@ def build_wheel(wheel_directory, config_settings=None, metadata_directory=None):
     return os.fspath(wheel_path.name)
 
 
-def _csv_rows(rows: List[Tuple[str, str, str]]) -> str:
+def _csv_rows(rows: list[tuple[str, str, str]]) -> str:
     from io import StringIO
 
     output = StringIO()

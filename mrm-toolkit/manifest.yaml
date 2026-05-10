@@ -16,6 +16,7 @@ entrypoints:
   quality_rubric: contracts/QUALITY-RUBRIC.md
   validator: scripts/mrm_validator.py
   template: templates/note-template.md
+  integration_guide: docs/index.md
 
 adapters:
   codex:
@@ -54,6 +55,7 @@ required_mrm_frontmatter:
 commands:
   validate: python mrm-toolkit/scripts/mrm_validator.py validate mrm-toolkit/research
   validate_file: python mrm-toolkit/scripts/mrm_validator.py validate-file <file.md>
+  count_lines: python mrm-toolkit/scripts/mrm_validator.py count-lines <file.md>
   generate_index: python mrm-toolkit/scripts/mrm_validator.py generate-index <research_dir>
   assemble: python mrm-toolkit/scripts/mrm_validator.py assemble <research_dir> <output.md>
   install_adapter: python mrm-toolkit/scripts/mrm_validator.py install-adapter <adapter> <project_root>

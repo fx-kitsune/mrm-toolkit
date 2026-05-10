@@ -19,8 +19,7 @@ Repo đã được tách rõ thành 4 lớp:
 | Workflow agent | [`mrm-toolkit/workflows/MRM-WORKFLOW.md`](mrm-toolkit/workflows/MRM-WORKFLOW.md) |
 | Output contract | [`mrm-toolkit/contracts/OUTPUT-CONTRACT.md`](mrm-toolkit/contracts/OUTPUT-CONTRACT.md) |
 | Quality rubric | [`mrm-toolkit/contracts/QUALITY-RUBRIC.md`](mrm-toolkit/contracts/QUALITY-RUBRIC.md) |
-| Prompt cũ/legacy | [`mrm-toolkit/docs/MRM-Skill-ModularResearchDocWriter.md`](mrm-toolkit/docs/MRM-Skill-ModularResearchDocWriter.md) |
-| Kế hoạch nâng cấp cũ/legacy | [`mrm-toolkit/docs/UPGRADE-PLAN-AgentSkill.md`](mrm-toolkit/docs/UPGRADE-PLAN-AgentSkill.md) |
+| Hướng dẫn tích hợp | [`mrm-toolkit/docs/index.md`](mrm-toolkit/docs/index.md) |
 
 
 ## Cài skill qua pip

@@ -14,7 +14,7 @@ TOOLKIT_HOME_ENV = "MRM_TOOLKIT_HOME"
 
 
 def default_skills_dir() -> Path:
-    """Return the default Codex skills directory for the current user."""
+    """Return the default agent skills directory for the current user."""
     codex_home = os.environ.get("CODEX_HOME")
     if codex_home:
         return Path(codex_home).expanduser() / "skills"
@@ -34,14 +34,20 @@ def package_root() -> Path:
     return Path(__file__).resolve().parent
 
 
-def bundled_skill_dir() -> Path:
-    """Return the filesystem path to the bundled skill directory."""
-    return package_root() / "skills" / DEFAULT_SKILL_NAME
-
-
 def bundled_skill_file() -> Path:
-    """Return the filesystem path to the bundled SKILL.md file."""
-    return bundled_skill_dir() / "SKILL.md"
+    """Return the SKILL.md from the bundled mrm-toolkit directory.
+
+    The skill file lives inside the toolkit tree, not duplicated in the
+    Python package.  Falls back to the package-local path when the toolkit
+    directory is not found (e.g. editable installs during development).
+    """
+    toolkit = bundled_toolkit_dir()
+    if toolkit is not None:
+        candidate = toolkit / "skills" / DEFAULT_SKILL_NAME / "SKILL.md"
+        if candidate.is_file():
+            return candidate
+    # Fallback: package-local copy (development / legacy layout)
+    return package_root() / "skills" / DEFAULT_SKILL_NAME / "SKILL.md"
 
 
 def bundled_toolkit_dir() -> Optional[Path]:
@@ -109,12 +115,17 @@ def install_skill(target_dir: Path, skill_name: str = DEFAULT_SKILL_NAME, overwr
     destination = destination_dir / "SKILL.md"
 
     if not source_file.is_file():
-        raise FileNotFoundError(f"Bundled skill file was not found: {source_file}")
+        raise FileNotFoundError(
+            f"Bundled skill file was not found: {source_file}\n"
+            "Make sure the mrm-toolkit directory is present alongside the package."
+        )
 
     if destination_dir.exists() and overwrite:
         shutil.rmtree(destination_dir)
     elif destination.exists():
-        raise FileExistsError(f"Skill already exists at {destination}; pass --overwrite to replace it.")
+        raise FileExistsError(
+            f"Skill already exists at {destination}; pass --overwrite to replace it."
+        )
 
     destination_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source_file, destination)
