@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRM Toolkit | Modular Research Doc Writer</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container nav-content">
+            <a href="#" class="logo">MRM Toolkit</a>
+            <nav class="nav-links">
+                <a href="#features">Tính năng</a>
+                <a href="#usage">Cách dùng</a>
+                <a href="#integrations">Tích hợp</a>
+                <a href="https://github.com/fx-kitsune/ModularResearchDocWriter"><i class="fa-brands fa-github"></i>
+                    GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Modular Research<br>Doc Writer</h1>
+                <p>Biến các yêu cầu nghiên cứu phức tạp thành hệ thống Markdown module hóa. Tối ưu hóa tuyệt đối cho AI
+                    Agent và kho tri thức hiện đại.</p>
+                <div class="btn-group">
+                    <a href="https://github.com/fx-kitsune/ModularResearchDocWriter" class="btn btn-primary">Bắt đầu
+                        ngay</a>
+                    <a href="#features" class="btn btn-secondary">Tìm hiểu thêm</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="features">
+            <div class="container">
+                <h2 class="section-title">4 Lớp chuẩn hóa</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fa-solid fa-brain icon"></i>
+                        <h3>01. Skill</h3>
+                        <p>Định nghĩa hành vi tái sử dụng cho Agent. Hướng dẫn Agent cách tư duy chuẩn MRM.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fa-solid fa-wind icon"></i>
+                        <h3>02. Workflow</h3>
+                        <p>Quy trình từ Scoping đến Assemble báo cáo một cách khoa học và nguyên tử.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fa-solid fa-file-contract icon"></i>
+                        <h3>03. Contracts</h3>
+                        <p>Thiết lập chuẩn Output (Frontmatter, TL;DR) và bộ Rubric đánh giá tự động.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fa-solid fa-plug icon"></i>
+                        <h3>04. Adapters</h3>
+                        <p>Tích hợp trực tiếp vào Claude Code, Gemini, GitHub Copilot và Cursor IDE.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="usage">
+            <div class="container">
+                <h2 class="section-title">Kiểm soát bằng CLI</h2>
+                <p style="text-align: center; margin-top: -2rem; color: var(--text-muted);">Đảm bảo tính nhất quán của
+                    dữ liệu nghiên cứu với bộ validator mạnh mẽ.</p>
+                <div class="code-display">
+                    <div><span class="prompt">$</span> <span class="cmd">python</span> mrm_validator.py validate
+                        research/</div>
+                    <div style="color: #57ab5a; margin-top: 0.5rem;">[PASS] 01-intro.md (Modular Frontmatter)</div>
+                    <div style="color: #57ab5a;">[PASS] 02-methodology.md (Context Safe)</div>
+                    <div style="color: #c69026;">[WARN] Missing cross-reference in 03-results.md</div>
+                    <div style="margin-top: 1rem;"><span class="prompt">$</span> <span class="cmd">python</span>
+                        mrm_validator.py assemble research/ final_report.md</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="integrations">
+            <div class="container" style="text-align: center;">
+                <h2 class="section-title">Hệ sinh thái hỗ trợ</h2>
+                <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center;">
+                    <span
+                        style="border: 1px solid var(--border-subtle); padding: 0.5rem 1.5rem; font-size: 0.8rem; background: var(--bg-glass);">Claude
+                        Code</span>
+                    <span
+                        style="border: 1px solid var(--border-subtle); padding: 0.5rem 1.5rem; font-size: 0.8rem; background: var(--bg-glass);">Cursor
+                        IDE</span>
+                    <span
+                        style="border: 1px solid var(--border-subtle); padding: 0.5rem 1.5rem; font-size: 0.8rem; background: var(--bg-glass);">GitHub
+                        Copilot</span>
+                    <span
+                        style="border: 1px solid var(--border-subtle); padding: 0.5rem 1.5rem; font-size: 0.8rem; background: var(--bg-glass);">Gemini</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 MRM Toolkit. MIT License.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
