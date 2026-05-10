@@ -1,0 +1,17 @@
+---
+description: ModularResearchDocWriter rules for Modular Research Markdown projects
+globs: ["**/*.md", "**/*.mdx"]
+alwaysApply: false
+---
+
+# Cursor Rule — ModularResearchDocWriter
+
+Apply when editing research, documentation, wiki, or report files.
+
+- Load `mrm-toolkit/skills/modular-research-doc-writer/SKILL.md` for behavior.
+- Follow `mrm-toolkit/contracts/OUTPUT-CONTRACT.md` for output shape.
+- Review with `mrm-toolkit/contracts/QUALITY-RUBRIC.md`.
+- Keep one topic per file and stay under 300 content lines.
+- Require MRM frontmatter: `id`, `title`, `status`, `tags`, `summary`, `ai_context`.
+- Include a one-line TL;DR after the H1.
+- Use verified cross-references only.

@@ -1,0 +1,66 @@
+id: modular-research-doc-writer
+name: ModularResearchDocWriter
+version: 1.0.0
+summary: >-
+  Agent-ready toolkit for planning, writing, validating, and assembling
+  Modular Research Markdown (MRM) documentation.
+language: vi
+default_output_language: vi
+license: MIT
+
+entrypoints:
+  human_readme: README.md
+  skill: skills/modular-research-doc-writer/SKILL.md
+  workflow: workflows/MRM-WORKFLOW.md
+  output_contract: contracts/OUTPUT-CONTRACT.md
+  quality_rubric: contracts/QUALITY-RUBRIC.md
+  validator: scripts/mrm_validator.py
+  template: templates/note-template.md
+
+adapters:
+  codex:
+    file: adapters/codex/AGENTS.md
+    install_target: AGENTS.md
+    use_for: OpenAI Codex CLI / IDE agents that read AGENTS.md
+  claude_code:
+    file: adapters/claude/CLAUDE.md
+    install_target: CLAUDE.md
+    use_for: Claude Code project memory and operating instructions
+  gemini:
+    file: adapters/gemini/GEMINI.md
+    install_target: GEMINI.md
+    use_for: Gemini CLI / Gemini-assisted coding workspaces
+  github_copilot:
+    file: adapters/copilot/copilot-instructions.md
+    install_target: .github/copilot-instructions.md
+    use_for: GitHub Copilot Chat repository instructions
+  cursor:
+    file: adapters/cursor/mrm.mdc
+    install_target: .cursor/rules/mrm.mdc
+    use_for: Cursor project rules
+  generic_agent_ide:
+    file: adapters/agent-ide/AGENT-RULES.md
+    install_target: .agent/rules/mrm.md
+    use_for: Agent IDEs with repo-local instruction files
+
+required_mrm_frontmatter:
+  - id
+  - title
+  - status
+  - tags
+  - summary
+  - ai_context
+
+commands:
+  validate: python mrm-toolkit/scripts/mrm_validator.py validate mrm-toolkit/research
+  validate_file: python mrm-toolkit/scripts/mrm_validator.py validate-file <file.md>
+  generate_index: python mrm-toolkit/scripts/mrm_validator.py generate-index <research_dir>
+  assemble: python mrm-toolkit/scripts/mrm_validator.py assemble <research_dir> <output.md>
+  install_adapter: python mrm-toolkit/scripts/mrm_validator.py install-adapter <adapter> <project_root>
+
+quality_gates:
+  max_content_lines: 300
+  require_tldr: true
+  require_ai_context: true
+  require_verified_cross_references: true
+  allow_placeholder_references: false
