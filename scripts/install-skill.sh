@@ -22,7 +22,7 @@ Examples:
 Environment:
   PYTHON       Python executable to use. Default: python3, then python.
   PIP_TARGET   Temporary pip --target folder. Default: a new folder under TMPDIR.
-  OVERWRITE    Set to 1/true/yes to replace an existing SKILL.md.
+  OVERWRITE    Set to 1/true/yes to replace an existing skill directory.
 USAGE
 }
 

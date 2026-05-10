@@ -25,7 +25,7 @@ Repo đã được tách rõ thành 4 lớp:
 
 ## Cài skill qua pip
 
-Repo có package Python tối giản để cài skill `modular-research-doc-writer` vào thư mục skill của Codex. Mặc định script sẽ cài vào `$CODEX_HOME/skills` hoặc `~/.codex/skills` nếu `CODEX_HOME` chưa được đặt.
+Repo có package Python tối giản để cài skill `modular-research-doc-writer` vào thư mục skill của Codex. Mặc định script sẽ cài vào `$CODEX_HOME/skills` hoặc `~/.codex/skills` nếu `CODEX_HOME` chưa được đặt. Installer cài cả thư mục skill, bao gồm `SKILL.md` và bản `mrm-toolkit/` đi kèm, nên các đường dẫn tham chiếu trong phần **Required references** được đọc tương đối từ thư mục skill đã cài.
 
 ### Bash / sh
 
