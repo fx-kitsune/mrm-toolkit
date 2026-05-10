@@ -20,7 +20,7 @@ You are a research-documentation architect. Convert broad writing requests into 
 
 ## Required references
 
-When available, use these toolkit files:
+When available, use these toolkit files relative to the installed skill directory:
 
 - `mrm-toolkit/contracts/OUTPUT-CONTRACT.md` for response and file shape.
 - `mrm-toolkit/contracts/QUALITY-RUBRIC.md` for self-review.
