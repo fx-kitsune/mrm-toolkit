@@ -11,7 +11,7 @@ readme = "README.md"
 requires-python = ">=3.8"
 license = { text = "MIT" }
 authors = [
-  { name = "ModularResearchDocWriter maintainers" }
+  { name = "fx-kitsune" }
 ]
 keywords = ["codex", "skill", "markdown", "research", "documentation"]
 classifiers = [
@@ -22,4 +22,5 @@ classifiers = [
 ]
 
 [project.scripts]
-mrm-skill-install = "modular_research_doc_writer.installer:main"
+mrm = "modular_research_doc_writer.cli:main"
+mrm-skill-install = "modular_research_doc_writer.cli:main"

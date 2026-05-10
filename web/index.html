@@ -18,7 +18,7 @@
                 <a href="#features">Tính năng</a>
                 <a href="#usage">Cách dùng</a>
                 <a href="#integrations">Tích hợp</a>
-                <a href="https://github.com/fx-kitsune/ModularResearchDocWriter"><i class="fa-brands fa-github"></i>
+                <a href="https://github.com/fx-kitsune/mrm-toolkit"><i class="fa-brands fa-github"></i>
                     GitHub</a>
             </nav>
         </div>
@@ -31,7 +31,7 @@
                 <p>Biến các yêu cầu nghiên cứu phức tạp thành hệ thống Markdown module hóa. Tối ưu hóa tuyệt đối cho AI
                     Agent và kho tri thức hiện đại.</p>
                 <div class="btn-group">
-                    <a href="https://github.com/fx-kitsune/ModularResearchDocWriter" class="btn btn-primary">Bắt đầu
+                    <a href="https://github.com/fx-kitsune/mrm-toolkit" class="btn btn-primary">Bắt đầu
                         ngay</a>
                     <a href="#features" class="btn btn-secondary">Tìm hiểu thêm</a>
                 </div>
@@ -72,13 +72,12 @@
                 <p style="text-align: center; margin-top: -2rem; color: var(--text-muted);">Đảm bảo tính nhất quán của
                     dữ liệu nghiên cứu với bộ validator mạnh mẽ.</p>
                 <div class="code-display">
-                    <div><span class="prompt">$</span> <span class="cmd">python</span> mrm_validator.py validate
-                        research/</div>
+                    <div><span class="prompt">$</span> <span class="cmd">mrm</span> validate research/</div>
                     <div style="color: #57ab5a; margin-top: 0.5rem;">[PASS] 01-intro.md (Modular Frontmatter)</div>
                     <div style="color: #57ab5a;">[PASS] 02-methodology.md (Context Safe)</div>
                     <div style="color: #c69026;">[WARN] Missing cross-reference in 03-results.md</div>
-                    <div style="margin-top: 1rem;"><span class="prompt">$</span> <span class="cmd">python</span>
-                        mrm_validator.py assemble research/ final_report.md</div>
+                    <div style="margin-top: 1rem;"><span class="prompt">$</span> <span class="cmd">mrm</span>
+                        assemble research/ final_report.md</div>
                 </div>
             </div>
         </section>
