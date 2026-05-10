@@ -25,7 +25,7 @@ Repo đã được tách rõ thành 4 lớp:
 
 ## Cài skill qua pip
 
-Repo có package Python tối giản để cài skill `modular-research-doc-writer` vào thư mục skill của Codex. Mặc định script sẽ cài vào `$CODEX_HOME/skills` hoặc `~/.codex/skills` nếu `CODEX_HOME` chưa được đặt.
+Repo có package Python tối giản để cài skill `modular-research-doc-writer` vào thư mục skill của Codex và cài toolkit dùng chung vào thư mục người dùng. Mặc định script cài `SKILL.md` vào `$CODEX_HOME/skills` hoặc `~/.codex/skills` nếu `CODEX_HOME` chưa được đặt, còn các file reference MRM được cài vào `$MRM_TOOLKIT_HOME` hoặc `~/.mrm-toolkit` nếu biến môi trường này chưa được đặt. Trên Windows, mặc định này tương ứng `%USERPROFILE%\.mrm-toolkit`; trên macOS/Linux là `$HOME/.mrm-toolkit`.
 
 ### Bash / sh
 
@@ -33,8 +33,8 @@ Repo có package Python tối giản để cài skill `modular-research-doc-writ
 # Cài từ checkout hiện tại vào thư mục skill mặc định
 scripts/install-skill.sh
 
-# Cài vào thư mục cụ thể và ghi đè nếu skill đã tồn tại
-OVERWRITE=1 scripts/install-skill.sh /path/to/codex/skills .
+# Cài vào thư mục cụ thể, cài toolkit vào ~/.mrm-toolkit và ghi đè skill nếu đã tồn tại
+OVERWRITE=1 scripts/install-skill.sh /path/to/codex/skills . "$HOME/.mrm-toolkit"
 
 # Cài trực tiếp từ Git URL qua pip
 scripts/install-skill.sh "$HOME/.codex/skills" git+https://github.com/<owner>/<repo>.git
@@ -46,8 +46,8 @@ scripts/install-skill.sh "$HOME/.codex/skills" git+https://github.com/<owner>/<r
 # Cài từ checkout hiện tại vào thư mục skill mặc định
 ./scripts/install-skill.ps1
 
-# Cài vào thư mục cụ thể và ghi đè nếu skill đã tồn tại
-./scripts/install-skill.ps1 "C:\codex\skills" . -Overwrite
+# Cài vào thư mục cụ thể, cài toolkit vào ~/.mrm-toolkit và ghi đè skill nếu đã tồn tại
+./scripts/install-skill.ps1 "C:\codex\skills" . -ToolkitDir "$HOME/.mrm-toolkit" -Overwrite
 
 # Cài trực tiếp từ Git URL qua pip
 ./scripts/install-skill.ps1 "$HOME/.codex/skills" "git+https://github.com/<owner>/<repo>.git"
@@ -57,7 +57,7 @@ Nếu chỉ muốn dùng pip thủ công, có thể cài package vào một fold
 
 ```bash
 python -m pip install . --target /tmp/mrm-skill-pkg
-PYTHONPATH=/tmp/mrm-skill-pkg python -m modular_research_doc_writer.installer --target "$HOME/.codex/skills" --overwrite
+PYTHONPATH=/tmp/mrm-skill-pkg python -m modular_research_doc_writer.installer --target "$HOME/.codex/skills" --toolkit-target "$HOME/.mrm-toolkit" --overwrite
 ```
 
 ## Cài adapter cho agent

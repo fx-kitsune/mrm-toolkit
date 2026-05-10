@@ -15,6 +15,7 @@ NORMALIZED = "modular_research_doc_writer"
 VERSION = "1.0.0"
 DIST_INFO = f"{NORMALIZED}-{VERSION}.dist-info"
 WHEEL_NAME = f"{NORMALIZED}-{VERSION}-py3-none-any.whl"
+TOOLKIT_DIR = "mrm-toolkit"
 
 
 def _metadata() -> str:
@@ -68,6 +69,13 @@ def _iter_package_files(root: Path):
     for path in sorted(package_root.rglob("*")):
         if path.is_file():
             yield path, path.relative_to(root).as_posix()
+
+    toolkit_root = root / TOOLKIT_DIR
+    if toolkit_root.is_dir():
+        archive_root = Path(NORMALIZED) / TOOLKIT_DIR
+        for path in sorted(toolkit_root.rglob("*")):
+            if path.is_file() and "__pycache__" not in path.parts:
+                yield path, (archive_root / path.relative_to(toolkit_root)).as_posix()
 
 
 def build_wheel(wheel_directory, config_settings=None, metadata_directory=None):

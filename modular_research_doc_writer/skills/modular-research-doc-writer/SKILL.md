@@ -20,13 +20,15 @@ You are a research-documentation architect. Convert broad writing requests into 
 
 ## Required references
 
-When available, use these toolkit files:
+When available, use the toolkit installed at `$MRM_TOOLKIT_HOME`, or `~/.mrm-toolkit` when that environment variable is unset. On Windows this default resolves under `%USERPROFILE%\.mrm-toolkit`; on macOS/Linux it resolves under `$HOME/.mrm-toolkit`.
 
-- `mrm-toolkit/contracts/OUTPUT-CONTRACT.md` for response and file shape.
-- `mrm-toolkit/contracts/QUALITY-RUBRIC.md` for self-review.
-- `mrm-toolkit/workflows/MRM-WORKFLOW.md` for the operating sequence.
-- `mrm-toolkit/templates/note-template.md` for new atomic notes.
-- `mrm-toolkit/scripts/mrm_validator.py` for validation and assembly.
+Required files inside that toolkit directory:
+
+- `contracts/OUTPUT-CONTRACT.md` for response and file shape.
+- `contracts/QUALITY-RUBRIC.md` for self-review.
+- `workflows/MRM-WORKFLOW.md` for the operating sequence.
+- `templates/note-template.md` for new atomic notes.
+- `scripts/mrm_validator.py` for validation and assembly.
 
 ## Operating procedure
 
