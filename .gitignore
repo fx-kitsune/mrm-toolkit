@@ -1,0 +1,1 @@
+Nothing should be ignored in this case, as the changes only include a markdown documentation file (.md) which is a source/config file and not a build artifact, dependency, or temporary file.
